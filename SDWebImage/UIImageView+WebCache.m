@@ -62,6 +62,42 @@ static char operationArrayKey;
     }
 }
 
+
+- (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder withAnimationCompletion:(void (^)(BOOL finished))completion {
+    [self cancelCurrentImageLoad];
+    
+    self.image = placeholder;
+    
+    if (url) {
+        __weak UIImageView *wself = self;
+        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+            if (!wself) return;
+            dispatch_main_sync_safe(^{
+                if (!wself) return;
+                if (image && cacheType == SDImageCacheTypeNone) {
+                    [UIView transitionWithView:wself
+                                      duration:0.4
+                                       options:UIViewAnimationOptionTransitionCrossDissolve
+                                    animations:^{
+                                        wself.image = image;
+                                    } completion:completion];
+                    [wself setNeedsLayout];
+                }
+                else {
+                    wself.image = image;
+                    [wself setNeedsLayout];
+                    
+                    if (completion && finished) {
+                        completion(finished);
+                    }
+                }
+                
+            });
+        }];
+        objc_setAssociatedObject(self, &operationKey, operation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
 - (void)setAnimationImagesWithURLs:(NSArray *)arrayOfURLs {
     [self cancelCurrentArrayLoad];
     __weak UIImageView *wself = self;
@@ -112,5 +148,6 @@ static char operationArrayKey;
     }
     objc_setAssociatedObject(self, &operationArrayKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
 
 @end

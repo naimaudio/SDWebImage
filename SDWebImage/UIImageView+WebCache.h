@@ -134,6 +134,21 @@
  */
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock;
 
+
+
+/**
+ * Set the imageView `image` with an `url`, placeholder with a crossfade animation if image is downloaded.
+ *
+ * The downloand is asynchronous and cached.
+ *
+ * @param url The url for the image.
+ * @param placeholder The image to be set initially, until the image request finishes.
+ * @param completion     A block called when animation has been completed. This block has the same prototype as a 
+ *                       normal UIView animation completion block
+ *
+ */
+- (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder withAnimationCompletion:(void (^)(BOOL finished))completion;
+
 /**
  * Download an array of images and starts them in an animation loop
  *
