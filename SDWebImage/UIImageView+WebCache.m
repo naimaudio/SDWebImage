@@ -66,6 +66,9 @@ static char operationArrayKey;
 
 
 - (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder withAnimationCompletion:(void (^)(BOOL finished))completion {
+    if ([url isEqual:objc_getAssociatedObject(self, &currentURLKey)]) {
+        return;
+    }
     [self cancelCurrentImageLoad];
     
     if (placeholder) {
