@@ -129,8 +129,11 @@
 }
 
 - (void)cancelInternalAndStop {
+    BOOL shouldStop = !self.finished;
     [self cancelInternal];
-    CFRunLoopStop(CFRunLoopGetCurrent());
+    if (shouldStop) {
+        CFRunLoopStop(CFRunLoopGetCurrent());
+    }
 }
 
 - (void)cancelInternal {
@@ -392,6 +395,10 @@
     }
 
     [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+}
+
+- (void) dealloc {
+    NSLog(@"%x %s - %@",(int) self, __PRETTY_FUNCTION__, @(0));
 }
 
 @end
