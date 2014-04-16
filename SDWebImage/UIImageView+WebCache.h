@@ -146,7 +146,7 @@
  *                       normal UIView animation completion block
  *
  */
-- (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder withAnimationCompletion:(void (^)(BOOL finished))completion;
+- (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions) options withAnimationCompletion:(void (^)(BOOL finished))completion;
 
 /**
  * Download an array of images and starts them in an animation loop

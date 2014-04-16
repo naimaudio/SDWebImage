@@ -65,7 +65,7 @@ static char operationArrayKey;
 }
 
 
-- (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder withAnimationCompletion:(void (^)(BOOL finished))completion {
+- (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions) options withAnimationCompletion:(void (^)(BOOL finished))completion {
     if ([url isEqual:objc_getAssociatedObject(self, &currentURLKey)]) {
         return;
     }
@@ -77,7 +77,7 @@ static char operationArrayKey;
     
     if (url && (!self.image || ![url isEqual:objc_getAssociatedObject(self, &currentURLKey)])) {
         __weak UIImageView *wself = self;
-        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
             if (!wself) return;
             dispatch_main_sync_safe(^{
                 if (!wself) return;
