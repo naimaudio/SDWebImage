@@ -147,6 +147,7 @@
 
                     if (error.code != NSURLErrorNotConnectedToInternet) {
                         @synchronized (self.failedURLs) {
+                            NSLog(@"failed URL error - %@", error);
                             [self.failedURLs addObject:url];
                         }
                     }
