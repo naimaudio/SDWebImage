@@ -133,8 +133,9 @@ static char operationArrayKey;
     id <SDWebImageOperation> operation = objc_getAssociatedObject(self, &operationKey);
     if (operation) {
         [operation cancel];
-        objc_setAssociatedObject(self, &operationKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
+    objc_setAssociatedObject(self, &operationKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &currentURLKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)cancelCurrentArrayLoad {
