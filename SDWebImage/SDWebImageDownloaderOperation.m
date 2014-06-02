@@ -129,11 +129,9 @@
 }
 
 - (void)cancelInternalAndStop {
-    BOOL shouldStop = !self.finished;
+    if (self.isFinished) return;
     [self cancelInternal];
-    if (shouldStop) {
-        CFRunLoopStop(CFRunLoopGetCurrent());
-    }
+    CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
 - (void)cancelInternal {
