@@ -398,8 +398,8 @@
     [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
 
-- (void) dealloc {
-    NSLog(@"%x %s - %@",(int) self, __PRETTY_FUNCTION__, @(0));
-}
+//- (void) dealloc {
+//    NSLog(@"%x %s - %@",(int) self, __PRETTY_FUNCTION__, @(0));
+//}
 
 @end
