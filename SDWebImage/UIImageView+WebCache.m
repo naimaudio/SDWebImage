@@ -188,6 +188,8 @@ static char TAG_ACTIVITY_SHOW;
 }
 
 - (void)sd_cancelCurrentImageLoad {
+    // reset current
+    objc_setAssociatedObject(self, &currentURLKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self sd_cancelImageLoadOperationWithKey:@"UIImageViewImageLoad"];
 }
 
