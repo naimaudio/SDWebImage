@@ -15,31 +15,31 @@
  * Usage with a UITableViewCell sub-class:
  *
  * @code
-
-#import <SDWebImage/UIImageView+WebCache.h>
-
-...
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *MyIdentifier = @"MyIdentifier";
  
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
+ #import <SDWebImage/UIImageView+WebCache.h>
  
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyIdentifier]
-                 autorelease];
-    }
+ ...
  
-    // Here we use the provided sd_setImageWithURL: method to load the web image
-    // Ensure you use a placeholder image otherwise cells will be initialized with no image
-    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:@"http://example.com/image.jpg"]
-                      placeholderImage:[UIImage imageNamed:@"placeholder"]];
+ - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ static NSString *MyIdentifier = @"MyIdentifier";
  
-    cell.textLabel.text = @"My Text";
-    return cell;
-}
-
+ UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
+ 
+ if (cell == nil) {
+ cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyIdentifier]
+ autorelease];
+ }
+ 
+ // Here we use the provided sd_setImageWithURL: method to load the web image
+ // Ensure you use a placeholder image otherwise cells will be initialized with no image
+ [cell.imageView sd_setImageWithURL:[NSURL URLWithString:@"http://example.com/image.jpg"]
+ placeholderImage:[UIImage imageNamed:@"placeholder"]];
+ 
+ cell.textLabel.text = @"My Text";
+ return cell;
+ }
+ 
  * @endcode
  */
 @interface UIImageView (WebCache)
@@ -162,6 +162,21 @@
  */
 - (void)sd_setImageWithPreviousCachedImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletionBlock)completedBlock;
 
+
+
+/**
+ * Set the imageView `image` with an `url`, placeholder with a crossfade animation if image is downloaded.
+ *
+ * The downloand is asynchronous and cached.
+ *
+ * @param url The url for the image.
+ * @param placeholder The image to be set initially, until the image request finishes.
+ * @param completion     A block called when animation has been completed. This block has the same prototype as a
+ *                       normal UIView animation completion block
+ *
+ */
+- (void) crossfadeImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions) options withAnimationCompletion:(void (^)(BOOL finished))completion;
+
 /**
  * Download an array of images and starts them in an animation loop
  *
@@ -213,3 +228,4 @@
 - (void)cancelCurrentImageLoad __deprecated_msg("Use `sd_cancelCurrentImageLoad`");
 
 @end
+
