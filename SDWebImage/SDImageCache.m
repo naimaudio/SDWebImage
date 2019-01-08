@@ -57,7 +57,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 }
 
 @interface SDImageCache ()
-
+@property (nonatomic, strong) NSFileManager *fileManager;
 @property (strong, nonatomic) NSCache *memCache;
 @property (strong, nonatomic) NSString *diskCachePath;
 @property (strong, nonatomic) NSMutableArray *customPaths;
@@ -66,9 +66,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 @end
 
 
-@implementation SDImageCache {
-    NSFileManager *_fileManager;
-}
+@implementation SDImageCache
 
 + (SDImageCache *)sharedImageCache {
     static dispatch_once_t once;
@@ -123,7 +121,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         _shouldDisableiCloud = YES;
 
         dispatch_sync(_ioQueue, ^{
-            _fileManager = [NSFileManager new];
+            self.fileManager = [NSFileManager new];
         });
 
 #if TARGET_OS_IPHONE
@@ -242,8 +240,8 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
             }
 
             if (data) {
-                if (![_fileManager fileExistsAtPath:_diskCachePath]) {
-                    [_fileManager createDirectoryAtPath:_diskCachePath withIntermediateDirectories:YES attributes:nil error:NULL];
+                if (![self.fileManager fileExistsAtPath:self.diskCachePath]) {
+                    [self.fileManager createDirectoryAtPath:self.diskCachePath withIntermediateDirectories:YES attributes:nil error:NULL];
                 }
 
                 // get cache Path for image key
@@ -251,7 +249,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
                 // transform to NSUrl
                 NSURL *fileURL = [NSURL fileURLWithPath:cachePathForKey];
 
-                [_fileManager createFileAtPath:cachePathForKey contents:data attributes:nil];
+                [self.fileManager createFileAtPath:cachePathForKey contents:data attributes:nil];
 
                 // disable iCloud backup
                 if (self.shouldDisableiCloud) {
@@ -282,7 +280,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
 - (void)diskImageExistsWithKey:(NSString *)key completion:(SDWebImageCheckCacheCompletionBlock)completionBlock {
     dispatch_async(_ioQueue, ^{
-        BOOL exists = [_fileManager fileExistsAtPath:[self defaultCachePathForKey:key]];
+        BOOL exists = [self.fileManager fileExistsAtPath:[self defaultCachePathForKey:key]];
         if (completionBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionBlock(exists);
@@ -414,7 +412,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
     if (fromDisk) {
         dispatch_async(self.ioQueue, ^{
-            [_fileManager removeItemAtPath:[self defaultCachePathForKey:key] error:nil];
+            [self.fileManager removeItemAtPath:[self defaultCachePathForKey:key] error:nil];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -455,8 +453,8 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (void)clearDiskOnCompletion:(SDWebImageNoParamsBlock)completion
 {
     dispatch_async(self.ioQueue, ^{
-        [_fileManager removeItemAtPath:self.diskCachePath error:nil];
-        [_fileManager createDirectoryAtPath:self.diskCachePath
+        [self.fileManager removeItemAtPath:self.diskCachePath error:nil];
+        [self.fileManager createDirectoryAtPath:self.diskCachePath
                 withIntermediateDirectories:YES
                                  attributes:nil
                                       error:NULL];
@@ -479,7 +477,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         NSArray *resourceKeys = @[NSURLIsDirectoryKey, NSURLContentModificationDateKey, NSURLTotalFileAllocatedSizeKey];
 
         // This enumerator prefetches useful properties for our cache files.
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL
+        NSDirectoryEnumerator *fileEnumerator = [self.fileManager enumeratorAtURL:diskCacheURL
                                                    includingPropertiesForKeys:resourceKeys
                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                  errorHandler:NULL];
@@ -515,7 +513,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         }
         
         for (NSURL *fileURL in urlsToDelete) {
-            [_fileManager removeItemAtURL:fileURL error:nil];
+            [self.fileManager removeItemAtURL:fileURL error:nil];
         }
 
         // If our remaining disk cache exceeds a configured maximum size, perform a second
@@ -532,7 +530,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
             // Delete files until we fall below our desired cache size.
             for (NSURL *fileURL in sortedFiles) {
-                if ([_fileManager removeItemAtURL:fileURL error:nil]) {
+                if ([self.fileManager removeItemAtURL:fileURL error:nil]) {
                     NSDictionary *resourceValues = cacheFiles[fileURL];
                     NSNumber *totalAllocatedSize = resourceValues[NSURLTotalFileAllocatedSizeKey];
                     currentCacheSize -= [totalAllocatedSize unsignedIntegerValue];
@@ -574,7 +572,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (NSUInteger)getSize {
     __block NSUInteger size = 0;
     dispatch_sync(self.ioQueue, ^{
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtPath:self.diskCachePath];
+        NSDirectoryEnumerator *fileEnumerator = [self.fileManager enumeratorAtPath:self.diskCachePath];
         for (NSString *fileName in fileEnumerator) {
             NSString *filePath = [self.diskCachePath stringByAppendingPathComponent:fileName];
             NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
@@ -587,7 +585,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (NSUInteger)getDiskCount {
     __block NSUInteger count = 0;
     dispatch_sync(self.ioQueue, ^{
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtPath:self.diskCachePath];
+        NSDirectoryEnumerator *fileEnumerator = [self.fileManager enumeratorAtPath:self.diskCachePath];
         count = [[fileEnumerator allObjects] count];
     });
     return count;
@@ -600,7 +598,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         NSUInteger fileCount = 0;
         NSUInteger totalSize = 0;
 
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL
+        NSDirectoryEnumerator *fileEnumerator = [self.fileManager enumeratorAtURL:diskCacheURL
                                                    includingPropertiesForKeys:@[NSFileSize]
                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                  errorHandler:NULL];
