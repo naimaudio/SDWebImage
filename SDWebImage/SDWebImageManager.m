@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-#import "SDWebImageManager.h"
+#import <WebImage/SDWebImageManager.h>
 #import <objc/message.h>
 
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>

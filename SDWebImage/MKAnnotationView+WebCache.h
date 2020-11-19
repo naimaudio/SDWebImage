@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Dailymotion. All rights reserved.
 //
 
-#import "MapKit/MapKit.h"
-#import "SDWebImageManager.h"
+#import <MapKit/MapKit.h>
+#import <WebImage/SDWebImageManager.h>
 
 /**
  * Integrates SDWebImage async downloading and caching of remote images with MKAnnotationView.

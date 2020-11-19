@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-#import "SDWebImageDownloader.h"
+#import <WebImage/SDWebImageDownloader.h>
 #import "SDWebImageDownloaderOperation.h"
 #import <ImageIO/ImageIO.h>
 

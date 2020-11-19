@@ -9,7 +9,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SDWebImageCompat.h"
+#import <WebImage/SDWebImageCompat.h>
 
 @interface UIImage (ForceDecode)
 

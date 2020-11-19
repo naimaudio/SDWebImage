@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-#import "SDImageCache.h"
+#import <WebImage/SDImageCache.h>
 #import "SDWebImageDecoder.h"
 #import "UIImage+MultiFormat.h"
 #import <CommonCrypto/CommonDigest.h>

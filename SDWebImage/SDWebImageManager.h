@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  */
 
-#import "SDWebImageCompat.h"
-#import "SDWebImageOperation.h"
-#import "SDWebImageDownloader.h"
-#import "SDImageCache.h"
+#import <WebImage/SDWebImageCompat.h>
+#import <WebImage/SDWebImageOperation.h>
+#import <WebImage/SDWebImageDownloader.h>
+#import <WebImage/SDImageCache.h>
 
 typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
     /**
