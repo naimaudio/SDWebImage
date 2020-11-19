@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SDWebImageManager.h"
+#import <WebImage/SDWebImageManager.h>
 
 @class SDWebImagePrefetcher;
 

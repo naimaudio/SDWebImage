@@ -7,7 +7,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "SDWebImageManager.h"
+#import <WebImage/SDWebImageManager.h>
 
 @interface UIView (WebCacheOperation)
 
